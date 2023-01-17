@@ -92,8 +92,7 @@ public class OpenCartActuator {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).click();
     }
     private void JavascriptExecutorClick(String xamppPath) {
-        WebElement element_review = driver.findElement(By.xpath(xamppPath));
-        executor.executeScript("arguments[0].click();", element_review);
+        executor.executeScript("arguments[0].click();", driver.findElement(By.xpath(xamppPath)));
     }
     public void addComment()
     {
@@ -116,9 +115,9 @@ public class OpenCartActuator {
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
         WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
-        WebDriverWaitClick("html/body/div[1]/div[2]/div[3]/div/div/div[1]/button");
-        WebDriverWaitClick("/html/body/div[1]/header/div/button");
-        JavascriptExecutorClick("/html/body/div[1]/nav/ul/li[2]/a");
+        WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[1]/input");
+        WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]/i");
+
     }
 
 }
