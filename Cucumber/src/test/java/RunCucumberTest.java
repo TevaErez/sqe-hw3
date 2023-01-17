@@ -30,7 +30,7 @@ public class RunCucumberTest {
     public void addCommentTest() {
         System.out.println("--------------- STARTING MOODLE MULTIPLE CHOICE QUIZ TEST ---------------");
         System.out.println("--------------- MULTIPLE CHOICE QUIZ TEST - TEACHER LOGIN ---------------");
-//        opencart.addcomment()
+        opencart.addComment();
 //        opencart.loginSequence(ADMIN_USERNAME, ADMIN_PASSWORD);
 //
 //        System.out.println("--------------- MULTIPLE CHOICE QUIZ TEST - NAVIGATING TO COURSE ---------------");
@@ -45,5 +45,11 @@ public class RunCucumberTest {
 //
 //        System.out.println("--------------- MULTIPLE CHOICE QUIZ TEST - TEACHER LOGIN ---------------");
 //        opencart.logoutAndCheck();
+    }
+
+    public void deleteProductTest() {
+        System.out.println("--------------- STARTING MOODLE MULTIPLE CHOICE QUIZ TEST ---------------");
+        System.out.println("--------------- MULTIPLE CHOICE QUIZ TEST - TEACHER LOGIN ---------------");
+        opencart.deleteProduct();
     }
 }
