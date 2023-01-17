@@ -100,12 +100,12 @@ public class OpenCartActuator {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(product_example_path))).click();
         WebElement element_review = driver.findElement(By.xpath(review_tab_path));
         JavascriptExecutor executor = (JavascriptExecutor)driver;
-        executor.executeScript("arguments[0].click();", element);
+        executor.executeScript("arguments[0].click();", element_review);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_review_path))).sendKeys("reviewer_1 review");
-        WebElement element2 = driver.findElement(By.xpath(review_insert_ranking_path));
-        executor.executeScript("arguments[0].click();", element2);
-        executor.executeScript("arguments[0].scrollIntoView();", element);
+        WebElement element_rank = driver.findElement(By.xpath(review_insert_ranking_path));
+        executor.executeScript("arguments[0].click();", element_rank);
+        executor.executeScript("arguments[0].scrollIntoView();", element_review);
     }
 
     public void deleteProduct() {
