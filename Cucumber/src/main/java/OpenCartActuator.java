@@ -1,3 +1,4 @@
+import net.bytebuddy.dynamic.scaffold.TypeInitializer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ public class OpenCartActuator {
     private WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor executor;
+    private String randomProductPicketed;
 
     public void initSession(String webDriver, String path, String url_path){
 //        webDriver = "webdriver.chrome.driver";
@@ -107,16 +109,24 @@ public class OpenCartActuator {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_review_path))).sendKeys("reviewer_1 review");
         WebElement element_rank = driver.findElement(By.xpath(review_insert_ranking_path));
+        WebElement element_product = driver.findElement(By.xpath("/html/body/main/div[2]/div/div/div[1]/div[2]/h1"));
+        randomProductPicketed = element_product.getText();
         executor.executeScript("arguments[0].click();", element_rank);
         executor.executeScript("arguments[0].scrollIntoView();", element_review);
     }
 
     public void deleteProduct(){
+        if (randomProductPicketed == null) {
+            System.out.println("--------------- DELETE PRODUCT TEST - NEED TO WRITE A REVIEW BEFORE RUNNING THIS FUNC" +
+                    " ---------------");
+            return;
+        }
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
         WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
         WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[1]/input");
         WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]/i");
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
 
     }
 
