@@ -103,6 +103,13 @@ public class OpenCartActuator {
         WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[1]/input");
         WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]");
         driver.switchTo().alert().accept();
+        driver.close();
+
+    }
+
+    public void submitComment(){
+        waitMilliseconds(1000);
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[2]/form/div[5]/div/button");
     }
 }
 
