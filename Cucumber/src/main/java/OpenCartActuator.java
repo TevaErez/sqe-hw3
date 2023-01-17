@@ -3,18 +3,20 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-//import org.openqa.selenium.WindowType;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class OpenCartActuator {
     private WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor executor;
-    private String randomProductPicketed;
+    static private String randomProductPicketed;
 
     public void initSession(String webDriver, String path, String url_path){
 //        webDriver = "webdriver.chrome.driver";
@@ -48,88 +50,60 @@ public class OpenCartActuator {
 
         System.out.println("Driver setup finished for - " + driver.getTitle());
     }
-//
-//    public void goToLogin(){
-//        // locate and click on web element -> login
-//        driver.findElement(By.xpath("/html/body/nav/div/div[2]/ul/li[2]/div/ul/li[2]")).click();
-//    }
-//
-////    public void enterLoginInfo(String username, String password) {
-////        // locate the username input box and enter username
-////        // $x("//*[@id='username']")
-////        // driver.findElement(By.xpath("//*[@id='username']")).sendKeys(username);
-////        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='username']"))).sendKeys(username);
-////
-////        // locate the password input box and enter password
-////        // $x("//*[@name='password' and @type='password']")
-////        driver.findElement(By.xpath("//*[@name='password' and @type='password']")).sendKeys(password);
-////
-////        // locate Log in button and press
-////        // $x("//*[@id='loginbtn']")
-////        driver.findElement(By.id("loginbtn")).click();
-////    }
-//
-//    public void teacherWelcomeMessage(){
-//        // now to check if login process succeeded -> find the element which indicates it succeeded
-//        // $x("//*[contains(text(),'Welcome, Teacher!')]")
-//        driver.findElement(By.xpath("//*[contains(text(),'Welcome back, Teacher!')]"));
-//    }
-
-//    public void loginSequence(String username, String password){
-//        // locate and click on web element -> login
-//        goToLogin();
-//
-//        // enter username and password -> press login
-//        enterLoginInfo(username, password);
-//
-//        // check for welcome message
-//        teacherWelcomeMessage();
-//
-//    }
 
     private void input_text(String xamppPath, String text){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).sendKeys(text);
     }
     private void WebDriverWaitClick(String xamppPath){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).click();
+        waitMilliseconds(500);
     }
     private void JavascriptExecutorClick(String xamppPath) {
         executor.executeScript("arguments[0].click();", driver.findElement(By.xpath(xamppPath)));
+        waitMilliseconds(500);
     }
+
+    private void JavascriptExecutorRollDown(String xamppPath) {
+        executor.executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath(xamppPath)));
+        waitMilliseconds(500);
+    }
+
+    private String JavascriptExecutorGetText(String xamppPath) {
+        WebElement element_product = driver.findElement(By.xpath(xamppPath));
+        return element_product.getText();
+    }
+
+    public void waitMilliseconds(int milli) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(milli);
+        } catch (Exception ignored) {
+        }
+    }
+
     public void addComment()
     {
-        String product_example_path = "/html/body/main/div[2]/div/div/div[2]/div[3]/form/div/div[1]/a/img";
-        String review_tab_path = "/html/body/main/div[2]/div/div/div[1]/ul/li[3]/a";
-        String review_insert_name_path = "/html/body/main/div[2]/div/div/div[1]/div[3]/div[3]/form/div[2]/input";
-        String review_insert_review_path = "/html/body/main/div[2]/div/div/div[1]/div[3]/div[3]/form/div[3]/textarea";
-        String review_insert_ranking_path = "/html/body/main/div[2]/div/div/div[1]/div[3]/div[3]/form/div[4]/div[1]/input[5]";
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(product_example_path))).click();
-        WebElement element_review = driver.findElement(By.xpath(review_tab_path));
-        executor.executeScript("arguments[0].click();", element_review);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_review_path))).sendKeys("reviewer_1 review");
-        WebElement element_rank = driver.findElement(By.xpath(review_insert_ranking_path));
-        WebElement element_product = driver.findElement(By.xpath("/html/body/main/div[2]/div/div/div[1]/div[2]/h1"));
-        randomProductPicketed = element_product.getText();
-        executor.executeScript("arguments[0].click();", element_rank);
-        executor.executeScript("arguments[0].scrollIntoView();", element_review);
+        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
+        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/ul/li[2]/a");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/ul/li[2]/a");
+        input_text("/html/body/main/div[2]/div/div/div[2]/div["+2+"]/form/div[2]/input","a reviewer");
+        input_text("/html/body/main/div[2]/div/div/div[2]/div["+2+"]/form/div[3]/textarea",
+                "Just A random review ny a random user to demonstrate");
+        randomProductPicketed = JavascriptExecutorGetText("/html/body/main/div[2]/div/div/div[1]/div[2]/h1");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div["+2+"]/form/div[4]/div[1]/input[5]");
+
     }
 
     public void deleteProduct(){
-        if (randomProductPicketed == null) {
-            System.out.println("--------------- DELETE PRODUCT TEST - NEED TO WRITE A REVIEW BEFORE RUNNING THIS FUNC" +
-                    " ---------------");
-            return;
-        }
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
         input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
         WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
+        input_text("/html/body/div/div[2]/div[2]/div/div[1]/div/div[2]/div[1]/input", randomProductPicketed);
+        WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[1]/div/div[2]/div[6]/button");
         WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[1]/input");
-        WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]/i");
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
-
+        WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]");
+        driver.switchTo().alert().accept();
     }
-
 }
 
 
