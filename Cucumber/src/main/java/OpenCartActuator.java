@@ -4,23 +4,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 //import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.chrome.ChromeOptions;
-import java.time.Duration;
-import java.util.Random;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
+import java.time.Duration;
 
 public class OpenCartActuator {
     private WebDriver driver;
     private WebDriverWait wait;
+    private JavascriptExecutor executor;
 
-
-    public void initSession(String webDriver, String path){
+    public void initSession(String webDriver, String path, String url_path){
 //        webDriver = "webdriver.chrome.driver";
 //        path = "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe";
         System.setProperty(webDriver, path);
@@ -33,11 +27,12 @@ public class OpenCartActuator {
 
 
         // launch website -> localhost
-        driver.get("http://localhost/opencartpro/");
+        driver.get(url_path);
 
         // maximize the window - some web apps look different in different sizes
         driver.manage().window().maximize();
 
+        executor = (JavascriptExecutor)driver;
 
         /*
             If we wanted to test the web application on different devices -
@@ -90,6 +85,16 @@ public class OpenCartActuator {
 //
 //    }
 
+    private void input_text(String xamppPath, String text){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).sendKeys(text);
+    }
+    private void WebDriverWaitClick(String xamppPath){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).click();
+    }
+    private void JavascriptExecutorClick(String xamppPath) {
+        WebElement element_review = driver.findElement(By.xpath(xamppPath));
+        executor.executeScript("arguments[0].click();", element_review);
+    }
     public void addComment()
     {
         String product_example_path = "/html/body/main/div[2]/div/div/div[2]/div[3]/form/div/div[1]/a/img";
@@ -99,7 +104,6 @@ public class OpenCartActuator {
         String review_insert_ranking_path = "/html/body/main/div[2]/div/div/div[1]/div[3]/div[3]/form/div[4]/div[1]/input[5]";
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(product_example_path))).click();
         WebElement element_review = driver.findElement(By.xpath(review_tab_path));
-        JavascriptExecutor executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element_review);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_name_path))).sendKeys("reviewer_1");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(review_insert_review_path))).sendKeys("reviewer_1 review");
@@ -108,8 +112,13 @@ public class OpenCartActuator {
         executor.executeScript("arguments[0].scrollIntoView();", element_review);
     }
 
-    public void deleteProduct() {
-
+    public void deleteProduct(){
+        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
+        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
+        WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
+        WebDriverWaitClick("html/body/div[1]/div[2]/div[3]/div/div/div[1]/button");
+        WebDriverWaitClick("/html/body/div[1]/header/div/button");
+        JavascriptExecutorClick("/html/body/div[1]/nav/ul/li[2]/a");
     }
 
 }

@@ -19,12 +19,12 @@ public class RunCucumberTest {
 //    private int DEFAULT_LENGTH = 5;
     private OpenCartActuator opencart;
     private String webDriver = "webdriver.chrome.driver";
-    private String path = "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe";
+    private String seleniumPath = "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe";
 
-    public RunCucumberTest() {
+    public RunCucumberTest(String url_path) {
         System.out.println("--------------- INITIALIZING MOODLE TEST - OPENING WEBPAGE ---------------");
         opencart = new OpenCartActuator();
-        opencart.initSession(webDriver, path);
+        opencart.initSession(webDriver, seleniumPath, url_path);
     }
 
     public void addCommentTest() {
