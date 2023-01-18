@@ -172,7 +172,7 @@ public class OpenCartActuator {
 
     public void checkAdded() {
         try {
-            JavascriptExecutorClick("//*[@id=\"button-review\"]");
+            JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[2]/form/div[5]/div/button");
             driver.findElement(By.id("alert"));
         } catch (Exception exception) {
             Assert.assertTrue(false);
@@ -198,7 +198,7 @@ public class OpenCartActuator {
         driver.switchTo().alert().accept();
     }
 
-    public void checkDeleted(String productName) {
+    public void checkDeleted() {
         try {
             driver.findElement(By.id("alert"));
 

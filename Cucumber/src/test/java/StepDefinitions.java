@@ -102,13 +102,13 @@ public class StepDefinitions {
     }
 
     @Then("product deleted")
-    public void productDeleted(String ProductName) {
-        openCart.checkDeleted(ProductName);
-
+    public void productDeleted() {
+        openCart.checkDeleted();
     }
 
     @And("switch")
     public void Switch(){
         openCart = allOpenCarts.get(0);
+        openCart.waitMilliseconds(500);
     }
 }

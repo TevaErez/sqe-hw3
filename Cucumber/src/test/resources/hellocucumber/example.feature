@@ -36,6 +36,7 @@ Feature: A set of scenarios for testing review section in opencart module
     When navigate to product <ProductName>
     And deletes <ProductName>
     Then product deleted
+    And close
     And switch
     Then new comment added
     And close
