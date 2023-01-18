@@ -36,7 +36,7 @@ public class StepDefinitions {
         openCart = new OpenCartActuator();
         allOpenCarts.add(openCart);
         openCart.initSession("webdriver.chrome.driver",
-                "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe",
+                "C:\\Users\\oferw\\Downloads\\sqe-hw1-main\\sqe-hw3\\Selenium\\chromedriver.exe",
                 "http://localhost/opencartpro/");
 
     }
@@ -81,7 +81,7 @@ public class StepDefinitions {
         openCart = new OpenCartActuator();
         allOpenCarts.add(openCart);
         openCart.initSession("webdriver.chrome.driver",
-                "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe",
+                "C:\\Users\\oferw\\Downloads\\sqe-hw1-main\\sqe-hw3\\Selenium\\chromedriver.exe",
                 "http://localhost/opencartpro/admin/index.php?route=catalog/product");
     }
 
@@ -102,13 +102,7 @@ public class StepDefinitions {
     }
 
     @Then("product deleted")
-    public void productDeleted() {
-        openCart.checkDeleted();
-    }
-
-    @And("switch")
-    public void Switch(){
-        openCart = allOpenCarts.get(0);
-        openCart.waitMilliseconds(500);
+    public void productDeleted(String ProductName) {
+        openCart.checkDeleted(ProductName);
     }
 }

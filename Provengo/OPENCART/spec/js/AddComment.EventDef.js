@@ -22,7 +22,7 @@ defineEvent(SeleniumSession, "goToComments", function(session, e) {
  */
 defineEvent(SeleniumSession, "writeComment", function(session, e) {
   // write name
-  session.writeText("/html/body/main/div[2]/div/div/div[2]/div[3]/form/div[2]/input", e.text);
+  session.writeText("/html/body/main/div[2]/div/div/div[2]/div[3]/form/div[2]/input", e.name);
   // write comment
   session.writeText("/html/body/main/div[2]/div/div/div[2]/div[3]/form/div[3]/textarea", e.comment);
 
@@ -34,6 +34,18 @@ defineEvent(SeleniumSession, "writeComment", function(session, e) {
 
   // post comment
   session.click("/html/body/main/div[2]/div/div/div[2]/div[3]/form/div[5]/div/button");
+
+  // pose();
+
+})
+
+/**
+ * The writeComment event defines the selenium action for entering a name and comment to the relevant text boxes and clicking a rating.
+ */
+defineEvent(SeleniumSession, "Assert", function(session, e) {
+  session.sleep(2000)
+  request(bp.Event('assert',{str: e.str}))
+  session.sleep(3000)
 
   // pose();
 
@@ -86,6 +98,7 @@ defineEvent(SeleniumSession, "deleteProduct", function(session, e) {
 
   // click delete button
   // session.click("/html/body/div[1]/div[2]/div[1]/div/div/button[3]/i");
+  // session.writeText("/html", "\n", false)
   // session.switchTo().alert().accept();
   // pose();
 
