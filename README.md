@@ -24,7 +24,7 @@ We tested the site module that allows for commenting on products and deleting pr
 *Preconditions:* There is the product in the system to delete.
 
 *Expected outcome:* The product is deleted
-$$
+
 
 ## How we tested
 We used two different testing methods:
