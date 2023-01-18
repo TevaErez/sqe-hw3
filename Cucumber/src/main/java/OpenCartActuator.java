@@ -1,52 +1,38 @@
+import graphql.Assert;
 import net.bytebuddy.dynamic.scaffold.TypeInitializer;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.WindowType;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 public class OpenCartActuator {
     private WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor executor;
+    static private String firstProductInList;
+
     static private String randomProductPicketed;
 
+
+    private  static final int  WAITTIME = 500;
+
     public void initSession(String webDriver, String path, String url_path){
-//        webDriver = "webdriver.chrome.driver";
-//        path = "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe";
         System.setProperty(webDriver, path);
 
-        // new chrome driver object
         this.driver = new ChromeDriver();
 
-        // new web driver wait -> waits until element are loaded (40 sec max)
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
 
-        // launch website -> localhost
         driver.get(url_path);
 
-        // maximize the window - some web apps look different in different sizes
         driver.manage().window().maximize();
 
         executor = (JavascriptExecutor)driver;
-
-        /*
-            If we wanted to test the web application on different devices -
-                1. Open the web app
-                2. Right click -> click inspect
-                3. Click on the phone icon at the top left corner of the inspect window (the app changes preview format at this point)
-                4. Locate the dimensions drop-down list at the top of the web app and choose device
-                5. Copy dimensions size (on the right side of the drop-down list)
-                   -> driver.manage().window().setSize(new Dimension(width, height));
-         */
 
         System.out.println("Driver setup finished for - " + driver.getTitle());
     }
@@ -56,16 +42,16 @@ public class OpenCartActuator {
     }
     private void WebDriverWaitClick(String xamppPath){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xamppPath))).click();
-        waitMilliseconds(500);
+        waitMilliseconds(WAITTIME);
     }
     private void JavascriptExecutorClick(String xamppPath) {
         executor.executeScript("arguments[0].click();", driver.findElement(By.xpath(xamppPath)));
-        waitMilliseconds(500);
+        waitMilliseconds(WAITTIME);
     }
 
     private void JavascriptExecutorRollDown(String xamppPath) {
         executor.executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath(xamppPath)));
-        waitMilliseconds(500);
+        waitMilliseconds(WAITTIME);
     }
 
     private String JavascriptExecutorGetText(String xamppPath) {
@@ -104,12 +90,87 @@ public class OpenCartActuator {
         WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]");
         driver.switchTo().alert().accept();
         driver.close();
-
     }
 
     public void submitComment(){
-        waitMilliseconds(1000);
-        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[2]/form/div[5]/div/button");
+        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/ul/li[2]/a");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/ul/li[2]/a");
+    }
+
+    public void makeSureThereIsAProduct(String username, String password) {
+        driver.get("http://localhost/opencartpro/admin/index.php?route=catalog/product");
+        waitMilliseconds(WAITTIME);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-username"))).sendKeys(username);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-password"))).sendKeys(password);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-login\"]/div[3]/button"))).click();
+        waitMilliseconds(WAITTIME);
+        try {
+            firstProductInList =
+                    JavascriptExecutorGetText("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[3]");
+            firstProductInList = firstProductInList.split("Enabled")[0];
+        }
+        catch (Exception noProductsInDB){
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/div[1]/div/div/a"))).click();
+            waitMilliseconds(WAITTIME);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-name-1"))).sendKeys("Product 1");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-meta-title-1"))).sendKeys("Product meta tag");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-product\"]/ul/li[2]/a"))).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-model"))).sendKeys("Product model");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-product\"]/ul/li[11]/a"))).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-keyword-0-1"))).sendKeys("Product seo");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/div[1]/div/div/button"))).click();
+            waitMilliseconds(WAITTIME);
+            makeSureThereIsAProduct(username,password);
+        }
+
+    }
+
+    public void makeSureThereAProductIsFeaturedInHomePage(String username, String password) {
+        driver.get("http://localhost/opencartpro/admin/index.php?route=marketplace/extension");
+        waitMilliseconds(WAITTIME);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-username"))).sendKeys(username);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-password"))).sendKeys(password);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-login\"]/div[3]/button"))).click();
+        waitMilliseconds(WAITTIME);
+        Select drpCountry = new Select(driver.findElement(By.id("input-type")));
+        drpCountry.selectByVisibleText("Modules (11)");
+        waitMilliseconds(WAITTIME);
+        JavascriptExecutorClick("/html/body/div/div[2]/div[2]/div/div[2]/div/fieldset[2]/div[2]/table/tbody/tr[9]/td[3]/a[1]");
+        input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", firstProductInList);
+        input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", " ");
+        waitMilliseconds(WAITTIME);
+        input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", String.valueOf(Keys.BACK_SPACE));
+        WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button");
+    }
+
+    public void navigateToReviewSection() {
+        driver.get("http://localhost/opencartpro");
+        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
+        JavascriptExecutorClick("/html/body/main/div[2]/div/div/ul/li[2]/a");
+        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/ul/li[2]");
+
+    }
+
+    public void fillAReview(List<String> reviewDetails) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-name"))).sendKeys(reviewDetails.get(0));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-text"))).sendKeys(reviewDetails.get(1));
+        randomProductPicketed = JavascriptExecutorGetText("//*[@id=\"content\"]/div[1]/div[2]/h1");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"input-rating\"]/input["+
+                reviewDetails.get(2)+"]"))).click();
+        waitMilliseconds(WAITTIME);
+    }
+
+    public void checkAdded() {
+        try {
+            driver.findElement(By.id("alert"));
+        } catch (Exception exception) {
+            Assert.assertTrue(false);
+        }
+    }
+
+    public void close() {
+        driver.quit();
     }
 }
 
