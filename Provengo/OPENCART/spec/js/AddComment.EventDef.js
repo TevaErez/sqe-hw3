@@ -46,7 +46,7 @@ defineEvent(SeleniumSession, "writeComment", function(session, e) {
 /**
  * The writeComment event defines the selenium action for entering a name and comment to the relevant text boxes and clicking a rating.
  */
-defineEvent(SeleniumSession, "Assert", function(session, e) {
+defineEvent(SeleniumSession, "CheckAssert", function(session, e) {
 
   session.assertText("/html/body/main/div[2]/div/div/p", "Product not found!")
 

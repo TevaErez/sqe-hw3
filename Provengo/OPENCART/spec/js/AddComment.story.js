@@ -20,18 +20,12 @@ story('deleteProductbyAdmin', function () {
     logInAsAdmin({username: 'admin', password: '3322'})
     goToProducts()
     deleteProduct()
+    checkAssert()
   }
 })
 
-
-/**
- * This story opens a new browser window, goes to 'http://localhost/opencartpro/', and checks if a product was deleted. */
-
-story('AssertDeletion', function () {
-  on(Any('EndOfAction').and(Any({eventName: "deleteProduct"})), function () {
-    // the "with" statement makes it redundant to write "s." before each call to a defined event (like the story above)
-    with (new SeleniumSession("three").start('http://localhost/opencartpro/index.php?route=product/product&language=en-gb&path=18&product_id=46')) {
-      Assert({str: "Product not found!"})
-    }
+story('test',function() {
+  block(Any('DeleteProduct'), function(){
+    waitFor(Any('EndOfAction').and(Any({eventName: "WriteComment",name: 'Ofer', comment: 'this product is amazing love it'})))
   })
 })
