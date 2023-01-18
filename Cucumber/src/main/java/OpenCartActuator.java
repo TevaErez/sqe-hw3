@@ -13,9 +13,8 @@ public class OpenCartActuator {
     private WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor executor;
-    static private String firstProductInList;
 
-    static private String randomProductPicketed;
+    private String randomProductPicketed;
 
 
     private  static final int  WAITTIME = 500;
@@ -81,11 +80,6 @@ public class OpenCartActuator {
     }
 
     public void deleteProduct(){
-        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
-        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
-        WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
-        input_text("/html/body/div/div[2]/div[2]/div/div[1]/div/div[2]/div[1]/input", randomProductPicketed);
-        WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[1]/div/div[2]/div[6]/button");
         WebDriverWaitClick("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[1]/input");
         WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]");
         driver.switchTo().alert().accept();
@@ -97,7 +91,7 @@ public class OpenCartActuator {
         JavascriptExecutorClick("/html/body/main/div[2]/div/div/ul/li[2]/a");
     }
 
-    public void makeSureThereIsAProduct(String username, String password) {
+    public void makeSureThereIsAProduct(String username, String password, String productName) {
         driver.get("http://localhost/opencartpro/admin/index.php?route=catalog/product");
         waitMilliseconds(WAITTIME);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-username"))).sendKeys(username);
@@ -105,27 +99,33 @@ public class OpenCartActuator {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-login\"]/div[3]/button"))).click();
         waitMilliseconds(WAITTIME);
         try {
-            firstProductInList =
-                    JavascriptExecutorGetText("/html/body/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[1]/table/tbody/tr[1]/td[3]");
-            firstProductInList = firstProductInList.split("Enabled")[0];
+            int i = 1;
+            String firstProductInList;
+            while (true) {
+                firstProductInList =
+                        JavascriptExecutorGetText("//*[@id=\"form-product\"]/div[1]/table/tbody/tr["+i+"]/td[3]");
+                firstProductInList = firstProductInList.split("\nEnabled")[0];
+                if (firstProductInList.equals(productName))
+                    return;
+                i++;
+            }
         }
         catch (Exception noProductsInDB){
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/div[1]/div/div/a"))).click();
             waitMilliseconds(WAITTIME);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-name-1"))).sendKeys("Product 1");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-name-1"))).sendKeys(productName);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-meta-title-1"))).sendKeys("Product meta tag");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-product\"]/ul/li[2]/a"))).click();
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-model"))).sendKeys("Product model");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"form-product\"]/ul/li[11]/a"))).click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-keyword-0-1"))).sendKeys("Product seo");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-keyword-0-1"))).sendKeys(productName+"seo");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/div[1]/div/div/button"))).click();
             waitMilliseconds(WAITTIME);
-            makeSureThereIsAProduct(username,password);
+            makeSureThereIsAProduct(username,password, productName);
         }
-
     }
 
-    public void makeSureThereAProductIsFeaturedInHomePage(String username, String password) {
+    public void makeSureThereAProductIsFeaturedInHomePage(String username, String password, String productName) {
         driver.get("http://localhost/opencartpro/admin/index.php?route=marketplace/extension");
         waitMilliseconds(WAITTIME);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-username"))).sendKeys(username);
@@ -136,20 +136,29 @@ public class OpenCartActuator {
         drpCountry.selectByVisibleText("Modules (11)");
         waitMilliseconds(WAITTIME);
         JavascriptExecutorClick("/html/body/div/div[2]/div[2]/div/div[2]/div/fieldset[2]/div[2]/table/tbody/tr[9]/td[3]/a[1]");
-        input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", firstProductInList);
+        input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", productName);
         input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", " ");
         waitMilliseconds(WAITTIME);
         input_text("/html/body/div/div[2]/div[2]/div/div[2]/form/div[2]/div/input", String.valueOf(Keys.BACK_SPACE));
         WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button");
     }
 
-    public void navigateToReviewSection() {
+    public void navigateToReviewSection(String productName) {
         driver.get("http://localhost/opencartpro");
-        JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
-        JavascriptExecutorClick("/html/body/main/div[2]/div/div/div[2]/div[1]/form/div/div[1]/a/img");
+        JavascriptExecutorRollDown("//*[@id=\"content\"]/div[2]/div[1]/form/div/div[2]/div[1]/h4/a");
+        int i = 1;
+        String firstProductInList;
+        while (true) {
+            firstProductInList =
+                    JavascriptExecutorGetText("//*[@id=\"content\"]/div[2]/div["+i+"]/form/div/div[2]/div[1]/h4/a");
+            firstProductInList = firstProductInList.split("\nEnabled")[0];
+            if (firstProductInList.equals(productName))
+                break;
+            i++;
+        }
+        JavascriptExecutorClick("//*[@id=\"content\"]/div[2]/div["+i+"]/form/div/div[1]/a/img");
         JavascriptExecutorClick("/html/body/main/div[2]/div/div/ul/li[2]/a");
         JavascriptExecutorRollDown("/html/body/main/div[2]/div/div/ul/li[2]");
-
     }
 
     public void fillAReview(List<String> reviewDetails) {
@@ -163,6 +172,7 @@ public class OpenCartActuator {
 
     public void checkAdded() {
         try {
+            JavascriptExecutorClick("//*[@id=\"button-review\"]");
             driver.findElement(By.id("alert"));
         } catch (Exception exception) {
             Assert.assertTrue(false);
@@ -170,7 +180,31 @@ public class OpenCartActuator {
     }
 
     public void close() {
-        driver.quit();
+        driver.close();
+    }
+
+    public void navigateToProduct(String productName) {
+//        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[1]/div/input", "admin");
+//        input_text("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[2]/div[1]/input", "3322");
+//        WebDriverWaitClick("/html/body/div/div[2]/div/div/div/div/div[2]/form/div[3]/button");
+        JavascriptExecutorClick("//*[@id=\"input-name\"]");
+        input_text("//*[@id=\"input-name\"]", productName);
+        WebDriverWaitClick("//*[@id=\"button-filter\"]");
+    }
+
+    public void deleteProduct(String productName){
+        WebDriverWaitClick("//*[@id=\"form-product\"]/div[1]/table/tbody/tr/td[1]/input");
+        WebDriverWaitClick("/html/body/div/div[2]/div[1]/div/div/button[3]");
+        driver.switchTo().alert().accept();
+    }
+
+    public void checkDeleted(String productName) {
+        try {
+            driver.findElement(By.id("alert"));
+
+        } catch (Exception exception) {
+            Assert.assertTrue(false);
+        }
     }
 }
 
