@@ -44,10 +44,8 @@ defineEvent(SeleniumSession, "writeComment", function(session, e) {
  */
 defineEvent(SeleniumSession, "Assert", function(session, e) {
   session.sleep(2000)
-  request(bp.Event('assert',{str: e.str}))
+  session.assertText("/html/body/main/div[2]/div/div/p", "Product not found!")
   session.sleep(3000)
-
-  // pose();
 
 })
 
@@ -99,7 +97,5 @@ defineEvent(SeleniumSession, "deleteProduct", function(session, e) {
   // click delete button
   // session.click("/html/body/div[1]/div[2]/div[1]/div/div/button[3]/i");
   // session.writeText("/html", "\n", false)
-  // session.switchTo().alert().accept();
-  // pose();
 
 })
