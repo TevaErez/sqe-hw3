@@ -41,19 +41,19 @@ public class StepDefinitions {
 
     }
 
-    @And("at least one product")
-    public void atLeastOneProduct() {
-        openCart.makeSureThereIsAProduct(ADMIN_USERNAME, ADMIN_PASSWORD);
+    @And("{string} created")
+    public void productCreated(String ProductName) {
+        openCart.makeSureThereIsAProduct(ADMIN_USERNAME, ADMIN_PASSWORD, ProductName);
     }
 
-    @And("product featured in home page")
-    public void productFeaturedInHomePage() {
-        openCart.makeSureThereAProductIsFeaturedInHomePage(ADMIN_USERNAME, ADMIN_PASSWORD);
+    @And("{string} featured in home page")
+    public void productFeaturedInHomePage(String productName) {
+        openCart.makeSureThereAProductIsFeaturedInHomePage(ADMIN_USERNAME, ADMIN_PASSWORD, productName);
     }
 
-    @When("navigate to review section of first product featured")
-    public void navigateToReviewSectionOfFirstProductFeatured() {
-        openCart.navigateToReviewSection();
+    @When("navigate to review section of {string} featured")
+    public void navigateToReviewSectionOfFirstProductFeatured(String productName) {
+        openCart.navigateToReviewSection(productName);
     }
 
     @And("submit review with {string} details")
@@ -70,6 +70,41 @@ public class StepDefinitions {
     @And("close")
     public void close() {
         openCart.close();
+    }
+
+    @Given("admin in Login page that is linked to product list")
+    public void adminInLoginPageThatIsLinkedToProductList() {
+        System.out.println("--------------- INITIALIZING OPENCART TEST - OPENING WEBPAGE ---------------");
+        if (allOpenCarts == null) {
+            allOpenCarts = new ArrayList<>();
+        }
+        openCart = new OpenCartActuator();
+        allOpenCarts.add(openCart);
+        openCart.initSession("webdriver.chrome.driver",
+                "C:\\Users\\User\\Desktop\\ass3sqe\\sqe-hw3\\Selenium\\chromedriver.exe",
+                "http://localhost/opencartpro/admin/index.php?route=catalog/product");
+    }
+
+//    @And("product {string} created")
+//    public void productProductNameCreated(String ProductName) {
+//
+//    }
+
+    @When("navigate to product {string}")
+    public void navigateToProductProductName(String ProductName) {
+        openCart.navigateToProduct(ProductName);
+    }
+
+    @And("deletes {string}")
+    public void deletesProductName(String ProductName) {
+        openCart.deleteProduct(ProductName);
+
+    }
+
+    @Then("product deleted")
+    public void productDeleted(String ProductName) {
+        openCart.checkDeleted(ProductName);
+
     }
 
 }
