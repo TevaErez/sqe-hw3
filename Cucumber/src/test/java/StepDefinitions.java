@@ -107,4 +107,8 @@ public class StepDefinitions {
 
     }
 
+    @And("switch")
+    public void Switch(){
+        openCart = allOpenCarts.get(0);
+    }
 }
