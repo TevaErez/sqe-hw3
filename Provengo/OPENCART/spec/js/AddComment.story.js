@@ -15,13 +15,11 @@ story('AddCommentToProduct', function () {
  * This story opens a new browser window, goes to http://localhost/opencartpro/admin, and deletes a product. */
 
 story('deleteProductbyAdmin', function () {
-  // on(Any('EndOfAction').and(Any({eventName: "writeComment"})), function () {
   // the "with" statement makes it redundant to write "s." before each call to a defined event (like the story above)
   with (new SeleniumSession().start('http://localhost/opencartpro/admin/')) {
     logInAsAdmin({username: 'admin', password: '3322'})
     goToProducts()
     deleteProduct()
-  // }
   }
 })
 
