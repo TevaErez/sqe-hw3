@@ -1,5 +1,5 @@
 /* @Provengo summon selenium */
-
+// like stepfile
 /**
  *  The ComposeQuery event defines the selenium actions for writing the query that was given in the parameter e.
  */
