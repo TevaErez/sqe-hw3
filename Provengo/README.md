@@ -22,6 +22,9 @@ provengo analyze -f PDF OPENCART
 ```
 3. We repeated steps 1-2 until we were satisfied with the generated model.
 4. We added [Event definitions](OPENCART/spec/js/AddComment.EventDef.js) to define how the stories actuate the website using Selenium.
+
+note: in the event deleteProduct, the feature of clicking a chrome pop-up is not currently available in Provengo, hence, 
+according to Achiya, we left it as is.
 5. We used the following command to run the tests:
 ```shell
 provengo run --show-sessions OPENCART
