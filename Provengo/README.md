@@ -30,7 +30,7 @@ according to Achiya, we left it as is.
 provengo run --show-sessions OPENCART
 ```
 6. We repeated steps 4-5 until we were satisfied with the result.
-7. We recorded a video of the running tests and added it to the report. Since more than one browser session was opened, we recorded the entire screen. The link for the video is https://easyupload.io/cch6kf.
+7. We recorded a video of the running tests and added it to the report. Since more than one browser session was opened, we recorded the entire screen. The link for the video is [video1620632362.mp4](video1620632362.mp4)
 8. We copied the generated graph of the model to a file named [model.pdf](model.pdf) inside this directory (the link should work).
 
 ### Story files
